@@ -1,0 +1,19 @@
+"""
+Requires the authenticated user to hold at least one of the given roles.
+
+It is evaluated by the GraphQL executor (gqlgen field directive), so the check
+happens per operation rather than per HTTP request — the gateway exposes a
+single POST /query endpoint, which makes path based HTTP middlewares useless for
+role enforcement.
+
+Semantics:
+  * no authenticated user in the context -> the field passes through. The
+    authority for admitting/rejecting unauthenticated traffic is AuthMiddleware,
+    which whitelists the public operations (loginUser/registerUser/refreshToken).
+  * authenticated user without any of the listed roles -> the field fails with
+    "forbidden: role not permitted" and the operation returns no data.
+
+Role names are matched against the roles reported by the role service, for
+example "Admin" (seeded) or "ROLE_ADMIN" (e2e pre-seeded).
+"""
+directive @hasRole(roles: [String!]!) on FIELD_DEFINITION

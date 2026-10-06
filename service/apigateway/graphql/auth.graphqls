@@ -1,0 +1,94 @@
+type TokenResponse {
+  access_token: String!
+  refresh_token: String!
+}
+
+## response
+type ApiResponseVerifyCode {
+  status: String!
+  message: String!
+}
+
+type ApiResponseForgotPassword {
+  status: String!
+  message: String!
+}
+
+type ApiResponseResetPassword {
+  status: String!
+  message: String!
+}
+
+type ApiResponseLogin {
+  status: String!
+  message: String!
+  data: TokenResponse
+}
+
+type ApiResponseRefreshToken {
+  status: String!
+  message: String!
+  data: TokenResponse
+}
+
+type ApiResponseRegister {
+  status: String!
+  message: String!
+  data: UserResponse
+}
+
+type ApiResponseGetMe {
+  status: String!
+  message: String!
+  data: UserResponse
+}
+
+## Input
+input RegisterInput {
+  firstname: String!
+  lastname: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input VerifyCodeInput {
+  code: String!
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  reset_token: String!
+  password: String!
+  confirm_password: String!
+}
+
+input RefreshTokenInput {
+  refresh_token: String!
+}
+
+input GetMeInput {
+  access_token: String!
+}
+
+## queries & mutation
+type Mutation {
+  verifyCode(input: VerifyCodeInput!): ApiResponseVerifyCode!
+  forgotPassword(input: ForgotPasswordInput!): ApiResponseForgotPassword!
+  resetPassword(input: ResetPasswordInput!): ApiResponseResetPassword!
+  registerUser(input: RegisterInput!): ApiResponseRegister!
+  loginUser(input: LoginInput!): ApiResponseLogin!
+  refreshToken(input: RefreshTokenInput!): ApiResponseRefreshToken!
+}
+
+type Query {
+  getMe(input: GetMeInput!): ApiResponseGetMe!
+}

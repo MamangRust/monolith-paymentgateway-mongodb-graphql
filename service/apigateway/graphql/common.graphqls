@@ -1,0 +1,6 @@
+type PaginationMeta {
+  current_page: Int!
+  page_size: Int!
+  total_pages: Int!
+  total_records: Int!
+}

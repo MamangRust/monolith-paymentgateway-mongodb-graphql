@@ -1,0 +1,326 @@
+# input Types
+input FindAllTransactionInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindAllTransactionCardNumberInput {
+  card_number: String!
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdTransactionInput {
+  transaction_id: Int!
+}
+
+input FindByCardNumberTransactionInput {
+  card_number: String!
+}
+
+input FindTransactionByMerchantIdInput {
+  merchant_id: Int!
+}
+
+input FindMonthlyTransactionStatusInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTransactionStatusInput {
+  year: Int!
+}
+
+input FindMonthlyTransactionStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+  month: Int!
+}
+
+input FindYearTransactionStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+input FindByYearCardNumberTransactionInput {
+  card_number: String!
+  year: Int!
+}
+
+input CreateTransactionInput {
+  api_key: String!
+  card_number: String!
+  amount: Int!
+  payment_method: String!
+  merchant_id: Int!
+  transaction_time: String
+}
+
+input UpdateTransactionInput {
+  transaction_id: Int!
+  api_key: String!
+  card_number: String!
+  amount: Int!
+  payment_method: String!
+  merchant_id: Int!
+  transaction_time: String
+}
+
+# Types
+type TransactionResponse {
+  id: Int!
+  card_number: String!
+  transaction_no: String!
+  amount: Int!
+  payment_method: String!
+  merchant_id: Int!
+  transaction_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type TransactionResponseDeletedAt {
+  id: Int!
+  card_number: String!
+  transaction_no: String!
+  amount: Int!
+  payment_method: String!
+  merchant_id: Int!
+  transaction_time: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type TransactionMonthStatusSuccessResponse {
+  year: String!
+  month: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TransactionYearStatusSuccessResponse {
+  year: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TransactionMonthStatusFailedResponse {
+  year: String!
+  month: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TransactionYearStatusFailedResponse {
+  year: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TransactionMonthMethodResponse {
+  month: String!
+  payment_method: String!
+  total_transactions: Int!
+  total_amount: Int!
+}
+
+type TransactionYearMethodResponse {
+  year: String!
+  payment_method: String!
+  total_transactions: Int!
+  total_amount: Int!
+}
+
+type TransactionMonthAmountResponse {
+  month: String!
+  total_amount: Int!
+}
+
+type TransactionYearAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+# Response Types
+type ApiResponseTransaction {
+  status: String!
+  message: String!
+  data: TransactionResponse
+}
+
+type ApiResponseTransactions {
+  status: String!
+  message: String!
+  data: [TransactionResponse!]!
+}
+
+type ApiResponseTransactionDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseTransactionAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponseTransactionDeleteAt {
+  status: String!
+  message: String!
+  data: TransactionResponseDeletedAt
+}
+
+type ApiResponsePaginationTransaction {
+  status: String!
+  message: String!
+  data: [TransactionResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationTransactionDeleteAt {
+  status: String!
+  message: String!
+  data: [TransactionResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseTransactionMonthStatusSuccess {
+  status: String!
+  message: String!
+  data: [TransactionMonthStatusSuccessResponse!]!
+}
+
+type ApiResponseTransactionYearStatusSuccess {
+  status: String!
+  message: String!
+  data: [TransactionYearStatusSuccessResponse!]!
+}
+
+type ApiResponseTransactionMonthStatusFailed {
+  status: String!
+  message: String!
+  data: [TransactionMonthStatusFailedResponse!]!
+}
+
+type ApiResponseTransactionYearStatusFailed {
+  status: String!
+  message: String!
+  data: [TransactionYearStatusFailedResponse!]!
+}
+
+type ApiResponseTransactionMonthMethod {
+  status: String!
+  message: String!
+  data: [TransactionMonthMethodResponse!]!
+}
+
+type ApiResponseTransactionYearMethod {
+  status: String!
+  message: String!
+  data: [TransactionYearMethodResponse!]!
+}
+
+type ApiResponseTransactionMonthAmount {
+  status: String!
+  message: String!
+  data: [TransactionMonthAmountResponse!]!
+}
+
+type ApiResponseTransactionYearAmount {
+  status: String!
+  message: String!
+  data: [TransactionYearAmountResponse!]!
+}
+
+# queries & mutations
+extend type Query {
+  findAllTransaction(
+    input: FindAllTransactionInput!
+  ): ApiResponsePaginationTransaction!
+  findAllTransactionByCardNumber(
+    input: FindAllTransactionCardNumberInput!
+  ): ApiResponsePaginationTransaction!
+  findByIdTransaction(input: FindByIdTransactionInput!): ApiResponseTransaction!
+
+  findMonthlyTransactionStatusSuccess(
+    input: FindMonthlyTransactionStatusInput!
+  ): ApiResponseTransactionMonthStatusSuccess!
+  findYearlyTransactionStatusSuccess(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionYearStatusSuccess!
+  findMonthlyTransactionStatusFailed(
+    input: FindMonthlyTransactionStatusInput!
+  ): ApiResponseTransactionMonthStatusFailed!
+  findYearlyTransactionStatusFailed(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionYearStatusFailed!
+
+  findMonthlyTransactionStatusSuccessByCardNumber(
+    input: FindMonthlyTransactionStatusCardNumberInput!
+  ): ApiResponseTransactionMonthStatusSuccess!
+  findYearlyTransactionStatusSuccessByCardNumber(
+    input: FindYearTransactionStatusCardNumberInput!
+  ): ApiResponseTransactionYearStatusSuccess!
+  findMonthlyTransactionStatusFailedByCardNumber(
+    input: FindMonthlyTransactionStatusCardNumberInput!
+  ): ApiResponseTransactionMonthStatusFailed!
+  findYearlyTransactionStatusFailedByCardNumber(
+    input: FindYearTransactionStatusCardNumberInput!
+  ): ApiResponseTransactionYearStatusFailed!
+
+  findMonthlyPaymentMethods(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionMonthMethod!
+  findYearlyPaymentMethods(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionYearMethod!
+  findMonthlyAmounts(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionMonthAmount!
+  findYearlyAmounts(
+    input: FindYearTransactionStatusInput!
+  ): ApiResponseTransactionYearAmount!
+
+  findMonthlyPaymentMethodsByCardNumber(
+    input: FindByYearCardNumberTransactionInput!
+  ): ApiResponseTransactionMonthMethod!
+  findYearlyPaymentMethodsByCardNumber(
+    input: FindByYearCardNumberTransactionInput!
+  ): ApiResponseTransactionYearMethod!
+  findMonthlyAmountsByCardNumber(
+    input: FindByYearCardNumberTransactionInput!
+  ): ApiResponseTransactionMonthAmount!
+  findYearlyAmountsByCardNumber(
+    input: FindByYearCardNumberTransactionInput!
+  ): ApiResponseTransactionYearAmount!
+
+  findTransactionByMerchantId(
+    input: FindTransactionByMerchantIdInput!
+  ): ApiResponseTransactions!
+  findByActiveTransaction(
+    input: FindAllTransactionInput!
+  ): ApiResponsePaginationTransactionDeleteAt!
+  findByTrashedTransaction(
+    input: FindAllTransactionInput!
+  ): ApiResponsePaginationTransactionDeleteAt!
+}
+
+extend type Mutation {
+  createTransaction(input: CreateTransactionInput!): ApiResponseTransaction!
+  updateTransaction(input: UpdateTransactionInput!): ApiResponseTransaction!
+  trashedTransaction(
+    input: FindByIdTransactionInput!
+  ): ApiResponseTransactionDeleteAt!
+  restoreTransaction(
+    input: FindByIdTransactionInput!
+  ): ApiResponseTransactionDeleteAt!
+  deleteTransactionPermanent(
+    input: FindByIdTransactionInput!
+  ): ApiResponseTransactionDelete!
+
+  restoreAllTransaction: ApiResponseTransactionAll!
+  deleteAllTransactionPermanent: ApiResponseTransactionAll!
+}

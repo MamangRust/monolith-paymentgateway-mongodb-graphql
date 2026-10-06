@@ -1,0 +1,175 @@
+# Input types
+input FindAllSaldoInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindMonthlySaldoTotalBalanceInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearlySaldoInput {
+  year: Int!
+}
+
+input FindByIdSaldoInput {
+  saldo_id: Int!
+}
+
+input CreateSaldoInput {
+  card_number: String!
+  total_balance: Int!
+}
+
+input UpdateSaldoInput {
+  saldo_id: Int!
+  card_number: String!
+  total_balance: Int!
+}
+
+# types
+type SaldoResponse {
+  saldo_id: Int!
+  card_number: String!
+  total_balance: Int!
+  withdraw_time: String
+  withdraw_amount: Int
+  created_at: String!
+  updated_at: String!
+}
+
+type SaldoResponseDeletedAt {
+  saldo_id: Int!
+  card_number: String!
+  total_balance: Int!
+  withdraw_time: String
+  withdraw_amount: Int
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type SaldoMonthTotalBalanceResponse {
+  month: String!
+  year: String!
+  total_balance: Int!
+}
+
+type SaldoYearTotalBalanceResponse {
+  year: String!
+  total_balance: Int!
+}
+
+type SaldoMonthBalanceResponse {
+  month: String!
+  total_balance: Int!
+}
+
+type SaldoYearBalanceResponse {
+  year: String!
+  total_balance: Int!
+}
+
+## response Types
+type ApiResponseSaldo {
+  status: String!
+  message: String!
+  data: SaldoResponse
+}
+
+type ApiResponseSaldoDeleteAt {
+  status: String!
+  message: String!
+  data: SaldoResponseDeletedAt
+}
+
+type ApiResponsesSaldo {
+  status: String!
+  message: String!
+  data: [SaldoResponse!]!
+}
+
+type ApiResponseSaldoDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseSaldoAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponseMonthTotalSaldo {
+  status: String!
+  message: String!
+  data: [SaldoMonthTotalBalanceResponse!]!
+}
+
+type ApiResponseYearTotalSaldo {
+  status: String!
+  message: String!
+  data: [SaldoYearTotalBalanceResponse!]!
+}
+
+type ApiResponseMonthSaldoBalances {
+  status: String!
+  message: String!
+  data: [SaldoMonthBalanceResponse!]!
+}
+
+type ApiResponseYearSaldoBalances {
+  status: String!
+  message: String!
+  data: [SaldoYearBalanceResponse!]!
+}
+
+type ApiResponsePaginationSaldo {
+  status: String!
+  message: String!
+  data: [SaldoResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationSaldoDeleteAt {
+  status: String!
+  message: String!
+  data: [SaldoResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+# queries & mutations
+extend type Query {
+  findAllSaldo(input: FindAllSaldoInput!): ApiResponsePaginationSaldo!
+  findByIdSaldo(input: FindByIdSaldoInput!): ApiResponseSaldo!
+  findMonthlyTotalSaldoBalance(
+    input: FindMonthlySaldoTotalBalanceInput!
+  ): ApiResponseMonthTotalSaldo!
+  findYearTotalSaldoBalance(
+    input: FindYearlySaldoInput!
+  ): ApiResponseYearTotalSaldo!
+  findMonthlySaldoBalances(
+    input: FindYearlySaldoInput!
+  ): ApiResponseMonthSaldoBalances!
+  findYearlySaldoBalances(
+    input: FindYearlySaldoInput!
+  ): ApiResponseYearSaldoBalances!
+  findByCardNumberSaldo(card_number: String!): ApiResponseSaldo!
+  findByActiveSaldo(
+    input: FindAllSaldoInput!
+  ): ApiResponsePaginationSaldoDeleteAt!
+  findByTrashedSaldo(
+    input: FindAllSaldoInput!
+  ): ApiResponsePaginationSaldoDeleteAt!
+}
+
+extend type Mutation {
+  createSaldo(input: CreateSaldoInput!): ApiResponseSaldo!
+  updateSaldo(input: UpdateSaldoInput!): ApiResponseSaldo!
+  trashedSaldo(input: FindByIdSaldoInput!): ApiResponseSaldoDeleteAt!
+  restoreSaldo(input: FindByIdSaldoInput!): ApiResponseSaldoDeleteAt!
+  deleteSaldoPermanent(input: FindByIdSaldoInput!): ApiResponseSaldoDelete!
+  restoreAllSaldo: ApiResponseSaldoAll!
+  deleteAllSaldoPermanent: ApiResponseSaldoAll!
+}

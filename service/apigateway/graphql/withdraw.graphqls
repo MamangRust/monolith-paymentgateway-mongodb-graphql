@@ -1,0 +1,262 @@
+# Input Types
+input FindAllWithdrawInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindAllWithdrawByCardNumberInput {
+  card_number: String!
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdWithdrawInput {
+  withdraw_id: Int!
+}
+
+input CreateWithdrawInput {
+  card_number: String!
+  withdraw_amount: Int!
+  withdraw_time: String!
+}
+
+input UpdateWithdrawInput {
+  withdraw_id: Int!
+  card_number: String!
+  withdraw_amount: Int!
+  withdraw_time: String!
+}
+
+input FindMonthlyWithdrawStatusInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearWithdrawStatusInput {
+  year: Int!
+}
+
+input FindMonthlyWithdrawStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+  month: Int!
+}
+
+input FindYearWithdrawStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+input FindYearWithdrawCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+# Types
+type WithdrawResponse {
+  withdraw_id: Int!
+  withdraw_no: String!
+  card_number: String!
+  withdraw_amount: Int!
+  withdraw_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type WithdrawResponseDeletedAt {
+  withdraw_id: Int!
+  withdraw_no: String!
+  card_number: String!
+  withdraw_amount: Int!
+  withdraw_time: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type WithdrawMonthStatusSuccessResponse {
+  year: String!
+  month: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type WithdrawYearStatusSuccessResponse {
+  year: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type WithdrawMonthStatusFailedResponse {
+  year: String!
+  month: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type WithdrawYearStatusFailedResponse {
+  year: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type WithdrawMonthAmountResponse {
+  month: String!
+  total_amount: Int!
+}
+
+type WithdrawYearAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+# Response Types
+type ApiResponseWithdraw {
+  status: String!
+  message: String!
+  data: WithdrawResponse
+}
+
+type ApiResponseWithdrawDeleteAt {
+  status: String!
+  message: String!
+  data: WithdrawResponseDeletedAt
+}
+
+type ApiResponsesWithdraw {
+  status: String!
+  message: String!
+  data: [WithdrawResponse!]!
+}
+
+type ApiResponseWithdrawDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseWithdrawAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponseWithdrawMonthStatusSuccess {
+  status: String!
+  message: String!
+  data: [WithdrawMonthStatusSuccessResponse!]!
+}
+
+type ApiResponseWithdrawYearStatusSuccess {
+  status: String!
+  message: String!
+  data: [WithdrawYearStatusSuccessResponse!]!
+}
+
+type ApiResponseWithdrawMonthStatusFailed {
+  status: String!
+  message: String!
+  data: [WithdrawMonthStatusFailedResponse!]!
+}
+
+type ApiResponseWithdrawYearStatusFailed {
+  status: String!
+  message: String!
+  data: [WithdrawYearStatusFailedResponse!]!
+}
+
+type ApiResponseWithdrawMonthAmount {
+  status: String!
+  message: String!
+  data: [WithdrawMonthAmountResponse!]!
+}
+
+type ApiResponseWithdrawYearAmount {
+  status: String!
+  message: String!
+  data: [WithdrawYearAmountResponse!]!
+}
+
+type ApiResponsePaginationWithdraw {
+  status: String!
+  message: String!
+  data: [WithdrawResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationWithdrawDeleteAt {
+  status: String!
+  message: String!
+  data: [WithdrawResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+# queries & mutations
+extend type Query {
+  findAllWithdraw(input: FindAllWithdrawInput!): ApiResponsePaginationWithdraw!
+  findAllWithdrawByCardNumber(
+    input: FindAllWithdrawByCardNumberInput!
+  ): ApiResponsePaginationWithdraw!
+  findByIdWithdraw(input: FindByIdWithdrawInput!): ApiResponseWithdraw!
+
+  findMonthlyWithdrawStatusSuccess(
+    input: FindMonthlyWithdrawStatusInput!
+  ): ApiResponseWithdrawMonthStatusSuccess!
+  findYearlyWithdrawStatusSuccess(
+    input: FindYearWithdrawStatusInput!
+  ): ApiResponseWithdrawYearStatusSuccess!
+  findMonthlyWithdrawStatusFailed(
+    input: FindMonthlyWithdrawStatusInput!
+  ): ApiResponseWithdrawMonthStatusFailed!
+  findYearlyWithdrawStatusFailed(
+    input: FindYearWithdrawStatusInput!
+  ): ApiResponseWithdrawYearStatusFailed!
+
+  findMonthlyWithdrawStatusSuccessCardNumber(
+    input: FindMonthlyWithdrawStatusCardNumberInput!
+  ): ApiResponseWithdrawMonthStatusSuccess!
+  findYearlyWithdrawStatusSuccessCardNumber(
+    input: FindYearWithdrawStatusCardNumberInput!
+  ): ApiResponseWithdrawYearStatusSuccess!
+  findMonthlyWithdrawStatusFailedCardNumber(
+    input: FindMonthlyWithdrawStatusCardNumberInput!
+  ): ApiResponseWithdrawMonthStatusFailed!
+  findYearlyWithdrawStatusFailedCardNumber(
+    input: FindYearWithdrawStatusCardNumberInput!
+  ): ApiResponseWithdrawYearStatusFailed!
+
+  findMonthlyWithdraws(
+    input: FindYearWithdrawStatusInput!
+  ): ApiResponseWithdrawMonthAmount!
+  findYearlyWithdraws(
+    input: FindYearWithdrawStatusInput!
+  ): ApiResponseWithdrawYearAmount!
+
+  findMonthlyWithdrawsByCardNumber(
+    input: FindYearWithdrawCardNumberInput!
+  ): ApiResponseWithdrawMonthAmount!
+  findYearlyWithdrawsByCardNumber(
+    input: FindYearWithdrawCardNumberInput!
+  ): ApiResponseWithdrawYearAmount!
+
+  findByCardNumberWithdraw(input: FindByCardNumberInput!): ApiResponsesWithdraw!
+  findByActiveWithdraw(
+    input: FindAllWithdrawInput!
+  ): ApiResponsePaginationWithdrawDeleteAt!
+  findByTrashedWithdraw(
+    input: FindAllWithdrawInput!
+  ): ApiResponsePaginationWithdrawDeleteAt!
+}
+
+extend type Mutation {
+  createWithdraw(input: CreateWithdrawInput!): ApiResponseWithdraw!
+  updateWithdraw(input: UpdateWithdrawInput!): ApiResponseWithdraw!
+  trashedWithdraw(input: FindByIdWithdrawInput!): ApiResponseWithdrawDeleteAt!
+  restoreWithdraw(input: FindByIdWithdrawInput!): ApiResponseWithdrawDeleteAt!
+  deleteWithdrawPermanent(
+    input: FindByIdWithdrawInput!
+  ): ApiResponseWithdrawDelete!
+
+  restoreAllWithdraw: ApiResponseWithdrawAll!
+  deleteAllWithdrawPermanent: ApiResponseWithdrawAll!
+}

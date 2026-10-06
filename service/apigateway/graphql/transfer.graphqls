@@ -1,0 +1,273 @@
+# Input Types
+input FindAllTransferInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdTransferInput {
+  transfer_id: Int!
+}
+
+input FindByCardNumberTransferInput {
+  card_number: String!
+  year: Int!
+}
+
+input FindMonthlyTransferStatusInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTransferStatusInput {
+  year: Int!
+}
+
+input FindMonthlyTransferStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+  month: Int!
+}
+
+input FindYearTransferStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+input CreateTransferInput {
+  transfer_from: String!
+  transfer_to: String!
+  transfer_amount: Int!
+}
+
+input UpdateTransferInput {
+  transfer_id: Int!
+  transfer_from: String!
+  transfer_to: String!
+  transfer_amount: Int!
+}
+
+input FindTransferByTransferFromInput {
+  transfer_from: String!
+}
+
+input FindTransferByTransferToInput {
+  transfer_to: String!
+}
+
+# Types
+type TransferResponse {
+  id: Int!
+  transfer_no: String!
+  transfer_from: String!
+  transfer_to: String!
+  transfer_amount: Int!
+  transfer_time: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type TransferResponseDeletedAt {
+  id: Int!
+  transfer_no: String!
+  transfer_from: String!
+  transfer_to: String!
+  transfer_amount: Int!
+  transfer_time: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type TransferMonthStatusSuccessResponse {
+  year: String!
+  month: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TransferYearStatusSuccessResponse {
+  year: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TransferMonthStatusFailedResponse {
+  year: String!
+  month: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TransferYearStatusFailedResponse {
+  year: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TransferMonthAmountResponse {
+  month: String!
+  total_amount: Int!
+}
+
+type TransferYearAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+# response Types
+type ApiResponseTransfer {
+  status: String!
+  message: String!
+  data: TransferResponse
+}
+
+type ApiResponseTransferDeleteAt {
+  status: String!
+  message: String!
+  data: TransferResponseDeletedAt
+}
+
+type ApiResponseTransfers {
+  status: String!
+  message: String!
+  data: [TransferResponse!]!
+}
+
+type ApiResponseTransferDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseTransferAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationTransfer {
+  status: String!
+  message: String!
+  data: [TransferResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationTransferDeleteAt {
+  status: String!
+  message: String!
+  data: [TransferResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseTransferMonthStatusSuccess {
+  status: String!
+  message: String!
+  data: [TransferMonthStatusSuccessResponse!]!
+}
+
+type ApiResponseTransferYearStatusSuccess {
+  status: String!
+  message: String!
+  data: [TransferYearStatusSuccessResponse!]!
+}
+
+type ApiResponseTransferMonthStatusFailed {
+  status: String!
+  message: String!
+  data: [TransferMonthStatusFailedResponse!]!
+}
+
+type ApiResponseTransferYearStatusFailed {
+  status: String!
+  message: String!
+  data: [TransferYearStatusFailedResponse!]!
+}
+
+type ApiResponseTransferMonthAmount {
+  status: String!
+  message: String!
+  data: [TransferMonthAmountResponse!]!
+}
+
+type ApiResponseTransferYearAmount {
+  status: String!
+  message: String!
+  data: [TransferYearAmountResponse!]!
+}
+
+# queries & mutations
+extend type Query {
+  findAllTransfer(input: FindAllTransferInput!): ApiResponsePaginationTransfer!
+  findByIdTransfer(input: FindByIdTransferInput!): ApiResponseTransfer!
+
+  findMonthlyTransferStatusSuccess(
+    input: FindMonthlyTransferStatusInput!
+  ): ApiResponseTransferMonthStatusSuccess!
+  findYearlyTransferStatusSuccess(
+    input: FindYearTransferStatusInput!
+  ): ApiResponseTransferYearStatusSuccess!
+  findMonthlyTransferStatusFailed(
+    input: FindMonthlyTransferStatusInput!
+  ): ApiResponseTransferMonthStatusFailed!
+  findYearlyTransferStatusFailed(
+    input: FindYearTransferStatusInput!
+  ): ApiResponseTransferYearStatusFailed!
+
+  findMonthlyTransferStatusSuccessByCardNumber(
+    input: FindMonthlyTransferStatusCardNumberInput!
+  ): ApiResponseTransferMonthStatusSuccess!
+  findYearlyTransferStatusSuccessByCardNumber(
+    input: FindYearTransferStatusCardNumberInput!
+  ): ApiResponseTransferYearStatusSuccess!
+  findMonthlyTransferStatusFailedByCardNumber(
+    input: FindMonthlyTransferStatusCardNumberInput!
+  ): ApiResponseTransferMonthStatusFailed!
+  findYearlyTransferStatusFailedByCardNumber(
+    input: FindYearTransferStatusCardNumberInput!
+  ): ApiResponseTransferYearStatusFailed!
+
+  findMonthlyTransferAmounts(
+    input: FindYearTransferStatusInput!
+  ): ApiResponseTransferMonthAmount!
+  findYearlyTransferAmounts(
+    input: FindYearTransferStatusInput!
+  ): ApiResponseTransferYearAmount!
+
+  findMonthlyTransferAmountsBySenderCardNumber(
+    input: FindByCardNumberTransferInput!
+  ): ApiResponseTransferMonthAmount!
+  findMonthlyTransferAmountsByReceiverCardNumber(
+    input: FindByCardNumberTransferInput!
+  ): ApiResponseTransferMonthAmount!
+  findYearlyTransferAmountsBySenderCardNumber(
+    input: FindByCardNumberTransferInput!
+  ): ApiResponseTransferYearAmount!
+  findYearlyTransferAmountsByReceiverCardNumber(
+    input: FindByCardNumberTransferInput!
+  ): ApiResponseTransferYearAmount!
+
+  findTransferByTransferFrom(
+    input: FindTransferByTransferFromInput!
+  ): ApiResponseTransfers!
+  findTransferByTransferTo(
+    input: FindTransferByTransferToInput!
+  ): ApiResponseTransfers!
+  findByActiveTransfer(
+    input: FindAllTransferInput!
+  ): ApiResponsePaginationTransferDeleteAt!
+  findByTrashedTransfer(
+    input: FindAllTransferInput!
+  ): ApiResponsePaginationTransferDeleteAt!
+}
+
+extend type Mutation {
+  createTransfer(input: CreateTransferInput!): ApiResponseTransfer!
+  updateTransfer(input: UpdateTransferInput!): ApiResponseTransfer!
+  trashedTransfer(input: FindByIdTransferInput!): ApiResponseTransferDeleteAt!
+  restoreTransfer(input: FindByIdTransferInput!): ApiResponseTransferDeleteAt!
+  deleteTransferPermanent(
+    input: FindByIdTransferInput!
+  ): ApiResponseTransferDelete!
+
+  restoreAllTransfer: ApiResponseTransferAll!
+  deleteAllTransferPermanent: ApiResponseTransferAll!
+}

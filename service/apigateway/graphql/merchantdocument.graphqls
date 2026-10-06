@@ -1,0 +1,150 @@
+# Input
+input CreateMerchantDocumentInput {
+  merchant_id: Int!
+  document_type: String!
+  document_url: String!
+}
+
+input UpdateMerchantDocumentInput {
+  document_id: Int!
+  merchant_id: Int!
+  document_type: String!
+  document_url: String!
+  note: String
+  status: String
+}
+
+input UpdateMerchantDocumentStatusInput {
+  document_id: Int!
+  merchant_id: Int!
+  note: String
+  status: String
+}
+
+input FindMerchantDocumentByIdInput {
+  document_id: Int!
+}
+
+input TrashedMerchantDocumentInput {
+  document_id: Int!
+}
+
+input RestoreMerchantDocumentInput {
+  document_id: Int!
+}
+
+input DeleteMerchantDocumentPermanentInput {
+  document_id: Int!
+}
+
+input FindAllMerchantDocumentsInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+# types
+type MerchantDocumentResponse {
+  document_id: Int!
+  merchant_id: Int!
+  document_type: String!
+  document_url: String!
+  status: String!
+  note: String!
+  uploaded_at: String!
+  updated_at: String!
+}
+
+type MerchantDocumentResponseDeleteAt {
+  document_id: Int!
+  merchant_id: Int!
+  document_type: String!
+  document_url: String!
+  status: String!
+  note: String!
+  uploaded_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+# response types
+type ApiResponseMerchantDocument {
+  status: String!
+  message: String!
+  data: MerchantDocumentResponse
+}
+
+type ApiResponseMerchantDocumentDeleteAt {
+  status: String!
+  message: String!
+  data: MerchantDocumentResponseDeleteAt
+}
+
+type ApiResponsesMerchantDocument {
+  status: String!
+  message: String!
+  data: [MerchantDocumentResponse!]!
+}
+
+type ApiResponsePaginationMerchantDocument {
+  status: String!
+  message: String!
+  data: [MerchantDocumentResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationMerchantDocumentAt {
+  status: String!
+  message: String!
+  data: [MerchantDocumentResponseDeleteAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseMerchantDocumentDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseMerchantDocumentAll {
+  status: String!
+  message: String!
+}
+
+# queries & mutation
+extend type Query {
+  findAllMerchantDocuments(
+    input: FindAllMerchantDocumentsInput!
+  ): ApiResponsePaginationMerchantDocument!
+  findAllActiveMerchantDocuments(
+    input: FindAllMerchantDocumentsInput!
+  ): ApiResponsePaginationMerchantDocumentAt!
+  findAllTrashedMerchantDocuments(
+    input: FindAllMerchantDocumentsInput!
+  ): ApiResponsePaginationMerchantDocumentAt!
+  findMerchantDocumentById(
+    input: FindMerchantDocumentByIdInput!
+  ): ApiResponseMerchantDocument!
+}
+
+extend type Mutation {
+  createMerchantDocument(
+    input: CreateMerchantDocumentInput!
+  ): ApiResponseMerchantDocument!
+  updateMerchantDocument(
+    input: UpdateMerchantDocumentInput!
+  ): ApiResponseMerchantDocument!
+  updateMerchantDocumentStatus(
+    input: UpdateMerchantDocumentStatusInput!
+  ): ApiResponseMerchantDocument!
+  trashedMerchantDocument(
+    input: TrashedMerchantDocumentInput!
+  ): ApiResponseMerchantDocumentDeleteAt!
+  restoreMerchantDocument(
+    input: RestoreMerchantDocumentInput!
+  ): ApiResponseMerchantDocumentDeleteAt!
+  deleteMerchantDocumentPermanent(
+    input: DeleteMerchantDocumentPermanentInput!
+  ): ApiResponseMerchantDocumentDelete!
+  restoreAllMerchantDocuments: ApiResponseMerchantDocumentAll!
+  deleteAllMerchantDocumentsPermanent: ApiResponseMerchantDocumentAll!
+}

@@ -1,0 +1,307 @@
+# input
+input CreateMerchantInput {
+  name: String!
+  user_id: Int!
+}
+
+input UpdateMerchantInput {
+  merchant_id: Int!
+  name: String!
+  user_id: Int!
+  status: String!
+}
+
+input UpdateMerchantStatusInput {
+  merchant_id: Int!
+  status: String!
+}
+
+input FindAllMerchantInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindAllMerchantTransactionInput {
+  page: Int
+  page_size: Int
+  search: String
+  merchant_id: Int!
+}
+
+input FindAllMerchantApikeyInput {
+  page: Int
+  page_size: Int
+  search: String
+  api_key: String!
+}
+
+input FindByIdMerchantInput {
+  merchant_id: Int!
+}
+
+input FindByApiKeyInput {
+  api_key: String!
+}
+
+input FindByMerchantUserIdInput {
+  user_id: Int!
+}
+
+input FindYearMerchantInput {
+  year: Int!
+}
+
+input FindYearMerchantByIdInput {
+  year: Int!
+  merchant_id: Int!
+}
+
+input FindYearMerchantByApikeyInput {
+  year: Int!
+  api_key: String!
+}
+
+## response Types
+type MerchantResponse {
+  id: Int!
+  name: String!
+  api_key: String!
+  status: String!
+  user_id: Int!
+  created_at: String!
+  updated_at: String!
+}
+
+type MerchantResponseDeletedAt {
+  id: Int!
+  name: String!
+  api_key: String!
+  status: String!
+  user_id: Int!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type MerchantTransactionResponse {
+  id: Int!
+  card_number: String!
+  amount: Int!
+  payment_method: String!
+  merchant_id: Int!
+  merchant_name: String!
+  transaction_time: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type MerchantMonthlyPaymentMethodResponse {
+  month: String!
+  payment_method: String!
+  total_amount: Int!
+}
+
+type MerchantYearlyPaymentMethodResponse {
+  year: String!
+  payment_method: String!
+  total_amount: Int!
+}
+
+type MerchantMonthlyAmountResponse {
+  month: String!
+  total_amount: Int!
+}
+
+type MerchantYearlyAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+type MerchantMonthlyTotalAmountResponse {
+  month: String!
+  year: String!
+  total_amount: Int!
+}
+
+type MerchantYearlyTotalAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+# response types
+type ApiResponseMerchant {
+  status: String!
+  message: String!
+  data: MerchantResponse
+}
+
+type ApiResponseMerchantDeleteAt {
+  status: String!
+  message: String!
+  data: MerchantResponseDeletedAt
+}
+
+type ApiResponsesMerchant {
+  status: String!
+  message: String!
+  data: [MerchantResponse!]!
+}
+
+type ApiResponseMerchantDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseMerchantAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationMerchant {
+  status: String!
+  message: String!
+  data: [MerchantResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationMerchantDeleteAt {
+  status: String!
+  message: String!
+  data: [MerchantResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationMerchantTransaction {
+  status: String!
+  message: String!
+  data: [MerchantTransactionResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseMerchantMonthlyPaymentMethod {
+  status: String!
+  message: String!
+  data: [MerchantMonthlyPaymentMethodResponse!]!
+}
+
+type ApiResponseMerchantYearlyPaymentMethod {
+  status: String!
+  message: String!
+  data: [MerchantYearlyPaymentMethodResponse!]!
+}
+
+type ApiResponseMerchantMonthlyAmount {
+  status: String!
+  message: String!
+  data: [MerchantMonthlyAmountResponse!]!
+}
+
+type ApiResponseMerchantYearlyAmount {
+  status: String!
+  message: String!
+  data: [MerchantYearlyAmountResponse!]!
+}
+
+type ApiResponseMerchantMonthlyTotalAmount {
+  status: String!
+  message: String!
+  data: [MerchantMonthlyTotalAmountResponse!]!
+}
+
+type ApiResponseMerchantYearlyTotalAmount {
+  status: String!
+  message: String!
+  data: [MerchantYearlyTotalAmountResponse!]!
+}
+
+# queries & Mutation
+extend type Query {
+  findAllMerchant(input: FindAllMerchantInput!): ApiResponsePaginationMerchant!
+  findByIdMerchant(input: FindByIdMerchantInput!): ApiResponseMerchant!
+  findByApiKey(input: FindByApiKeyInput!): ApiResponseMerchant!
+  findAllTransactionMerchant(
+    input: FindAllMerchantInput!
+  ): ApiResponsePaginationMerchantTransaction!
+  findMonthlyPaymentMethodsMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantMonthlyPaymentMethod!
+  findYearlyPaymentMethodMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantYearlyPaymentMethod!
+  findMonthlyAmountMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantMonthlyAmount!
+  findYearlyAmountMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantYearlyAmount!
+  findMonthlyTotalAmountMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantMonthlyTotalAmount!
+  findYearlyTotalAmountMerchant(
+    input: FindYearMerchantInput!
+  ): ApiResponseMerchantYearlyTotalAmount!
+  findAllTransactionByMerchant(
+    input: FindAllMerchantTransactionInput!
+  ): ApiResponsePaginationMerchantTransaction!
+  findMonthlyPaymentMethodByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantMonthlyPaymentMethod!
+  findYearlyPaymentMethodByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantYearlyPaymentMethod!
+  findMonthlyAmountByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantMonthlyAmount!
+  findYearlyAmountByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantYearlyAmount!
+  findMonthlyTotalAmountByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantMonthlyTotalAmount!
+  findYearlyTotalAmountByMerchants(
+    input: FindYearMerchantByIdInput!
+  ): ApiResponseMerchantYearlyTotalAmount!
+  findAllTransactionByApikey(
+    input: FindAllMerchantApikeyInput!
+  ): ApiResponsePaginationMerchantTransaction!
+  findMonthlyPaymentMethodByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantMonthlyPaymentMethod!
+  findYearlyPaymentMethodByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantYearlyPaymentMethod!
+  findMonthlyAmountByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantMonthlyAmount!
+  findYearlyAmountByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantYearlyAmount!
+  findMonthlyTotalAmountByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantMonthlyTotalAmount!
+  findYearlyTotalAmountByApikey(
+    input: FindYearMerchantByApikeyInput!
+  ): ApiResponseMerchantYearlyTotalAmount!
+  findByMerchantUserId(input: FindByMerchantUserIdInput!): ApiResponsesMerchant!
+  findByActive(
+    input: FindAllMerchantInput!
+  ): ApiResponsePaginationMerchantDeleteAt!
+  findByTrashed(
+    input: FindAllMerchantInput!
+  ): ApiResponsePaginationMerchantDeleteAt!
+}
+
+extend type Mutation {
+  createMerchant(input: CreateMerchantInput!): ApiResponseMerchant!
+  updateMerchant(input: UpdateMerchantInput!): ApiResponseMerchant!
+  updateMerchantStatus(input: UpdateMerchantStatusInput!): ApiResponseMerchant!
+  trashedMerchant(input: FindByIdMerchantInput!): ApiResponseMerchantDeleteAt!
+  restoreMerchant(input: FindByIdMerchantInput!): ApiResponseMerchantDeleteAt!
+  deleteMerchantPermanent(
+    input: FindByIdMerchantInput!
+  ): ApiResponseMerchantDelete!
+  restoreAllMerchant: ApiResponseMerchantAll!
+  deleteAllMerchantPermanent: ApiResponseMerchantAll!
+}

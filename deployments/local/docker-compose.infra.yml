@@ -1,0 +1,397 @@
+# Infrastructure-only Compose for the E2E flow.
+#
+# Used by `scripts/e2e.sh` so the Go stack can be run natively on the host
+# (faster feedback loop, no per-service image rebuild) while infra lives in
+# containers. Ports are host-mapped to the same values that
+# `deployments/local/local.env` expects on the host side.
+#
+# No `migrate`/`apigateway`/gRPC service containers are defined here on
+# purpose — the e2e script runs those as host processes.
+#
+# Usage:
+#   docker compose -f deployments/local/docker-compose.infra.yml up -d
+#   docker compose -f deployments/local/docker-compose.infra.yml down -v
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: DRAGON
+      MONGO_INITDB_ROOT_PASSWORD: DRAGON
+      MONGO_INITDB_DATABASE: PAYMENT_GATEWAY
+    command:
+      - "mongod"
+      - "--bind_ip_all"
+      - "--wiredTigerCacheSizeGB"
+      - "1"
+      - "--slowms"
+      - "1000"
+      - "--setParameter"
+      - "maxConns=1000"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet -u DRAGON -p DRAGON --eval 'db.adminCommand({ ping: 1 }).ok' | grep -q 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis-apigateway:
+    image: redis:7.4
+    container_name: redis_apigateway
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_apigateway_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-auth:
+    image: redis:7.4
+    container_name: redis_auth
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_auth_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-user:
+    image: redis:7.4
+    container_name: redis_user
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_user_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-card:
+    image: redis:7.4
+    container_name: redis_card
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6382:6379"
+    volumes:
+      - redis_card_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-merchant:
+    image: redis:7.4
+    container_name: redis_merchant
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6383:6379"
+    volumes:
+      - redis_merchant_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-role:
+    image: redis:7.4
+    container_name: redis_role
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6384:6379"
+    volumes:
+      - redis_role_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-saldo:
+    image: redis:7.4
+    container_name: redis_saldo
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6385:6379"
+    volumes:
+      - redis_saldo_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-transaction:
+    image: redis:7.4
+    container_name: redis_transaction
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6386:6379"
+    volumes:
+      - redis_transaction_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-topup:
+    image: redis:7.4
+    container_name: redis_topup
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6387:6379"
+    volumes:
+      - redis_topup_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-transfer:
+    image: redis:7.4
+    container_name: redis_transfer
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6388:6379"
+    volumes:
+      - redis_transfer_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-withdraw:
+    image: redis:7.4
+    container_name: redis_withdraw
+    command: >
+      redis-server
+      --requirepass dragon_knight
+      --maxmemory 96mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+      --maxclients 200
+    ports:
+      - "6389:6379"
+    volumes:
+      - redis_withdraw_data:/data
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "dragon_knight", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: my-kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      KAFKA_CLUSTER_ID: kraft-cluster-01
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mongo_data:
+  redis_apigateway_data:
+  redis_auth_data:
+  redis_user_data:
+  redis_card_data:
+  redis_merchant_data:
+  redis_role_data:
+  redis_saldo_data:
+  redis_transaction_data:
+  redis_topup_data:
+  redis_transfer_data:
+  redis_withdraw_data:
+
+networks:
+  app_network:
+    driver: bridge

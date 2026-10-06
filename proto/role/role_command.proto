@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option go_package = 'github.com/MamangRust/monolith-payment-gateway-pb/role';
+
+package pb.role;
+
+import "google/protobuf/empty.proto";
+import "role/role.proto";
+
+message CreateRoleRequest { string name = 1; }
+
+message UpdateRoleRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message ApiResponseRoleAll {
+  string status = 1;
+  string message = 2;
+}
+
+message ApiResponseRoleDelete {
+  string status = 1;
+  string message = 2;
+}
+
+service RoleCommandService {
+  rpc CreateRole(CreateRoleRequest) returns (ApiResponseRole) {}
+  rpc UpdateRole(UpdateRoleRequest) returns (ApiResponseRole) {}
+  rpc TrashedRole(FindByIdRoleRequest) returns (ApiResponseRoleDeleteAt) {}
+  rpc RestoreRole(FindByIdRoleRequest) returns (ApiResponseRoleDeleteAt) {}
+  rpc DeleteRolePermanent(FindByIdRoleRequest) returns (ApiResponseRoleDelete) {
+  }
+  rpc RestoreAllRole(google.protobuf.Empty) returns (ApiResponseRoleAll) {}
+  rpc DeleteAllRolePermanent(google.protobuf.Empty)
+      returns (ApiResponseRoleAll) {}
+}

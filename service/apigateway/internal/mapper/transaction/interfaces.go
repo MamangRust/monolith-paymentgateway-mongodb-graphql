@@ -1,0 +1,25 @@
+package transactiongraphqlmapper
+
+import (
+	"github.com/MamangRust/monolith-payment-gateway-apigateway/internal/model"
+	pb "github.com/MamangRust/monolith-payment-gateway-pb/transaction"
+	pbStats "github.com/MamangRust/monolith-payment-gateway-pb/transaction/stats"
+)
+
+type TransactionGraphqlMapper interface {
+	ToGraphqlResponseTransactionMonthStatusSuccess(res *pbStats.ApiResponseTransactionMonthStatusSuccess) *model.APIResponseTransactionMonthStatusSuccess
+	ToGraphqlResponseTransactionYearStatusSuccess(res *pbStats.ApiResponseTransactionYearStatusSuccess) *model.APIResponseTransactionYearStatusSuccess
+	ToGraphqlResponseTransactionMonthStatusFailed(res *pbStats.ApiResponseTransactionMonthStatusFailed) *model.APIResponseTransactionMonthStatusFailed
+	ToGraphqlResponseTransactionYearStatusFailed(res *pbStats.ApiResponseTransactionYearStatusFailed) *model.APIResponseTransactionYearStatusFailed
+	ToGraphqlResponseTransactionMonthMethod(res *pbStats.ApiResponseTransactionMonthMethod) *model.APIResponseTransactionMonthMethod
+	ToGraphqlResponseTransactionYearMethod(res *pbStats.ApiResponseTransactionYearMethod) *model.APIResponseTransactionYearMethod
+	ToGraphqlResponseTransactionMonthAmount(res *pbStats.ApiResponseTransactionMonthAmount) *model.APIResponseTransactionMonthAmount
+	ToGraphqlResponseTransactionYearAmount(res *pbStats.ApiResponseTransactionYearAmount) *model.APIResponseTransactionYearAmount
+	ToGraphqlTransactionAll(res *pb.ApiResponseTransactionAll) *model.APIResponseTransactionAll
+	ToGraphqlTransactionDelete(res *pb.ApiResponseTransactionDelete) *model.APIResponseTransactionDelete
+	ToGraphqlPaginationTransaction(res *pb.ApiResponsePaginationTransaction) *model.APIResponsePaginationTransaction
+	ToGraphqlPaginationTransactionDeleteAt(res *pb.ApiResponsePaginationTransactionDeleteAt) *model.APIResponsePaginationTransactionDeleteAt
+	ToGraphqlResponseTransaction(res *pb.ApiResponseTransaction) *model.APIResponseTransaction
+	ToGraphqlResponseTransactions(res *pb.ApiResponseTransactions) *model.APIResponseTransactions
+	ToGraphqlResponseTransactionDeleteAt(res *pb.ApiResponseTransactionDeleteAt) *model.APIResponseTransactionDeleteAt
+}

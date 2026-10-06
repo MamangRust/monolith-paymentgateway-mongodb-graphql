@@ -1,0 +1,306 @@
+# input Types
+input FindAllTopupInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindAllTopupByCardNumberInput {
+  card_number: String!
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdTopupInput {
+  topup_id: Int!
+}
+
+input FindMonthlyTopupStatusInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTopupStatusInput {
+  year: Int!
+}
+
+input FindMonthlyTopupStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+  month: Int!
+}
+
+input FindYearTopupStatusCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+input FindByCardNumberTopupInput {
+  card_number: String!
+  year: Int
+}
+
+input FindYearTopupCardNumberInput {
+  card_number: String!
+  year: Int!
+}
+
+input CreateTopupInput {
+  card_number: String!
+  topup_no: String!
+  topup_amount: Int!
+  topup_method: String!
+}
+
+input UpdateTopupInput {
+  topup_id: Int!
+  card_number: String!
+  topup_amount: Int!
+  topup_method: String!
+}
+
+# types
+type TopupResponse {
+  id: Int!
+  card_number: String!
+  topup_no: String!
+  topup_amount: Int!
+  topup_method: String!
+  topup_time: String
+  created_at: String!
+  updated_at: String!
+}
+
+type TopupResponseDeletedAt {
+  id: Int!
+  card_number: String!
+  topup_no: String!
+  topup_amount: Int!
+  topup_method: String!
+  topup_time: String
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type TopupMonthStatusSuccessResponse {
+  year: String!
+  month: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TopupYearStatusSuccessResponse {
+  year: String!
+  total_success: Int!
+  total_amount: Int!
+}
+
+type TopupMonthStatusFailedResponse {
+  year: String!
+  month: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TopupYearStatusFailedResponse {
+  year: String!
+  total_failed: Int!
+  total_amount: Int!
+}
+
+type TopupMonthMethodResponse {
+  month: String!
+  topup_method: String!
+  total_topups: Int!
+  total_amount: Int!
+}
+
+type TopupYearMethodResponse {
+  year: String!
+  topup_method: String!
+  total_topups: Int!
+  total_amount: Int!
+}
+
+type TopupMonthAmountResponse {
+  month: String!
+  total_amount: Int!
+}
+
+type TopupYearAmountResponse {
+  year: String!
+  total_amount: Int!
+}
+
+# response Types
+type ApiResponseTopup {
+  status: String!
+  message: String!
+  data: TopupResponse
+}
+
+type ApiResponseTopupDeleteAt {
+  status: String!
+  message: String!
+  data: TopupResponseDeletedAt
+}
+
+type ApiResponsesTopup {
+  status: String!
+  message: String!
+  data: [TopupResponse!]!
+}
+
+type ApiResponsePaginationTopup {
+  status: String!
+  message: String!
+  data: [TopupResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationTopupDeleteAt {
+  status: String!
+  message: String!
+  data: [TopupResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseTopupMonthStatusSuccess {
+  status: String!
+  message: String!
+  data: [TopupMonthStatusSuccessResponse!]!
+}
+
+type ApiResponseTopupYearStatusSuccess {
+  status: String!
+  message: String!
+  data: [TopupYearStatusSuccessResponse!]!
+}
+
+type ApiResponseTopupMonthStatusFailed {
+  status: String!
+  message: String!
+  data: [TopupMonthStatusFailedResponse!]!
+}
+
+type ApiResponseTopupYearStatusFailed {
+  status: String!
+  message: String!
+  data: [TopupYearStatusFailedResponse!]!
+}
+
+type ApiResponseTopupMonthMethod {
+  status: String!
+  message: String!
+  data: [TopupMonthMethodResponse!]!
+}
+
+type ApiResponseTopupYearMethod {
+  status: String!
+  message: String!
+  data: [TopupYearMethodResponse!]!
+}
+
+type ApiResponseTopupMonthAmount {
+  status: String!
+  message: String!
+  data: [TopupMonthAmountResponse!]!
+}
+
+type ApiResponseTopupYearAmount {
+  status: String!
+  message: String!
+  data: [TopupYearAmountResponse!]!
+}
+
+type ApiResponseTopupAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponseTopupDelete {
+  status: String!
+  message: String!
+}
+
+# queries & mutations
+extend type Query {
+  findAllTopup(input: FindAllTopupInput!): ApiResponsePaginationTopup!
+  findAllTopupByCardNumber(
+    input: FindAllTopupByCardNumberInput!
+  ): ApiResponsePaginationTopup!
+  findByIdTopup(input: FindByIdTopupInput!): ApiResponseTopup!
+
+  findMonthlyTopupStatusSuccess(
+    input: FindMonthlyTopupStatusInput!
+  ): ApiResponseTopupMonthStatusSuccess!
+  findYearlyTopupStatusSuccess(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupYearStatusSuccess!
+  findMonthlyTopupStatusFailed(
+    input: FindMonthlyTopupStatusInput!
+  ): ApiResponseTopupMonthStatusFailed!
+  findYearlyTopupStatusFailed(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupYearStatusFailed!
+
+  findMonthlyTopupStatusSuccessByCardNumber(
+    input: FindMonthlyTopupStatusCardNumberInput!
+  ): ApiResponseTopupMonthStatusSuccess!
+  findYearlyTopupStatusSuccessByCardNumber(
+    input: FindYearTopupStatusCardNumberInput!
+  ): ApiResponseTopupYearStatusSuccess!
+  findMonthlyTopupStatusFailedByCardNumber(
+    input: FindMonthlyTopupStatusCardNumberInput!
+  ): ApiResponseTopupMonthStatusFailed!
+  findYearlyTopupStatusFailedByCardNumber(
+    input: FindYearTopupStatusCardNumberInput!
+  ): ApiResponseTopupYearStatusFailed!
+
+  findMonthlyTopupMethods(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupMonthMethod!
+  findYearlyTopupMethods(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupYearMethod!
+  findMonthlyTopupAmounts(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupMonthAmount!
+  findYearlyTopupAmounts(
+    input: FindYearTopupStatusInput!
+  ): ApiResponseTopupYearAmount!
+
+  findMonthlyTopupMethodsByCardNumber(
+    input: FindYearTopupCardNumberInput!
+  ): ApiResponseTopupMonthMethod!
+  findYearlyTopupMethodsByCardNumber(
+    input: FindYearTopupCardNumberInput!
+  ): ApiResponseTopupYearMethod!
+  findMonthlyTopupAmountsByCardNumber(
+    input: FindYearTopupCardNumberInput!
+  ): ApiResponseTopupMonthAmount!
+  findYearlyTopupAmountsByCardNumber(
+    input: FindYearTopupCardNumberInput!
+  ): ApiResponseTopupYearAmount!
+
+  findByCardNumberTopup(input: FindByCardNumberTopupInput!): ApiResponseTopup!
+  findByActiveTopup(
+    input: FindAllTopupInput!
+  ): ApiResponsePaginationTopupDeleteAt!
+  findByTrashedTopup(
+    input: FindAllTopupInput!
+  ): ApiResponsePaginationTopupDeleteAt!
+}
+
+extend type Mutation {
+  createTopup(input: CreateTopupInput!): ApiResponseTopup!
+  updateTopup(input: UpdateTopupInput!): ApiResponseTopup!
+  trashedTopup(input: FindByIdTopupInput!): ApiResponseTopupDeleteAt!
+  restoreTopup(input: FindByIdTopupInput!): ApiResponseTopupDeleteAt!
+  deleteTopupPermanent(input: FindByIdTopupInput!): ApiResponseTopupDelete!
+
+  restoreAllTopup: ApiResponseTopupAll!
+  deleteAllTopupPermanent: ApiResponseTopupAll!
+}

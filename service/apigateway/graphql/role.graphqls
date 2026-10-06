@@ -1,0 +1,103 @@
+# input
+input FindAllRoleInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdRoleInput {
+  role_id: Int!
+}
+
+input FindByUserIdRoleInput {
+  user_id: Int!
+}
+
+input CreateRoleInput {
+  name: String!
+}
+
+input UpdateRoleInput {
+  id: Int!
+  name: String!
+}
+
+# types
+type RoleResponse {
+  id: Int!
+  name: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type RoleResponseDeletedAt {
+  id: Int!
+  name: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+# response types
+type ApiResponseRole {
+  status: String!
+  message: String!
+  data: RoleResponse
+}
+
+type ApiResponseRoleDeleteAt {
+  status: String!
+  message: String!
+  data: RoleResponseDeletedAt
+}
+
+type ApiResponsesRole {
+  status: String!
+  message: String!
+  data: [RoleResponse!]!
+}
+
+type ApiResponsePaginationRole {
+  status: String!
+  message: String!
+  data: [RoleResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationRoleDeleteAt {
+  status: String!
+  message: String!
+  data: [RoleResponseDeletedAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseRoleDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseRoleAll {
+  status: String!
+  message: String!
+}
+
+# queries and mutation
+extend type Query {
+  findAllRole(input: FindAllRoleInput!): ApiResponsePaginationRole! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  findByIdRole(input: FindByIdRoleInput!): ApiResponseRole! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  findByActiveRole(input: FindAllRoleInput!): ApiResponsePaginationRoleDeleteAt! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  findByTrashedRole(
+    input: FindAllRoleInput!
+  ): ApiResponsePaginationRoleDeleteAt! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  findByUserIdRole(input: FindByUserIdRoleInput!): ApiResponsesRole! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+}
+
+extend type Mutation {
+  createRole(input: CreateRoleInput!): ApiResponseRole! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  updateRole(input: UpdateRoleInput!): ApiResponseRole! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  trashedRole(input: FindByIdRoleInput!): ApiResponseRoleDeleteAt! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  restoreRole(input: FindByIdRoleInput!): ApiResponseRoleDeleteAt! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  deleteRolePermanent(input: FindByIdRoleInput!): ApiResponseRoleDelete! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  restoreAllRole: ApiResponseRoleAll! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+  deleteAllRolePermanent: ApiResponseRoleAll! @hasRole(roles: ["Admin", "ROLE_ADMIN"])
+}
